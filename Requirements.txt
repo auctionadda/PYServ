@@ -1,0 +1,12 @@
+
+## Requirements
+
+* [PyZMQ](https://pyzmq.readthedocs.io/en/latest/) is the Python bindings for [ZeroMQ]((http://zeromq.org/)). You can install it using
+  `pip install pyzmq` command or see more installation options [here](http://zeromq.org/bindings:python) or
+  [here](https://github.com/zeromq/pyzmq).
+* [NetMQ](https://netmq.readthedocs.io/en/latest/) is a native C# port of ZeroMQ. Normally you need to install this using
+  `NuGet` package manager inside `Visual Studio` when you want to build a .NET application, or you could install using
+  `.NET CLI`. But for this repository here, you don't need to do any of the installation because we've already included
+  `AsyncIO.dll` and `NetMQ.dll` for you inside `UnityProject/Assets/NetMQExample/Plugins/` directory.
+  If you want to build your own `dll` files, please take a look at
+  [this issue](https://github.com/valkjsaaa/Unity-ZeroMQ-Example/issues/7).
