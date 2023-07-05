@@ -12,15 +12,22 @@ def handle_post_request():
     # Replace the following lines with your desired logic
     
     if base64_data:
+        # Check if padding is needed and add it if necessary
+        padding_length = 4 - (len(base64_data) % 4)
+        base64_data += '=' * padding_length
+        
         # Decode the base64 data
-        decoded_data = base64.b64decode(base64_data)
-        
-        # Save the decoded data to a file
-        filename = f"RecivedData\data.txt"
-        with open(filename, "wb") as file:
-            file.write(decoded_data)
-        
-        response = "Data received and saved to file: " + filename
+        try:
+            decoded_data = base64.b64decode(base64_data)
+            
+            # Save the decoded data to a file
+            filename = "data.txt"
+            with open(filename, "wb") as file:
+                file.write(decoded_data)
+            
+            response = "Data received and saved to file: " + filename
+        except base64.binascii.Error as e:
+            response = "Error decoding base64 data: " + str(e)
     else:
         response = "No data received."
     
