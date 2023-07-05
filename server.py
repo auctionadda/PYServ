@@ -1,4 +1,5 @@
 from flask import Flask, request
+import base64
 
 app = Flask(__name__)
 
@@ -11,7 +12,15 @@ def handle_post_request():
     # Replace the following lines with your desired logic
     
     if base64_data:
-        response = "Data received and processed successfully."
+        # Decode the base64 data
+        decoded_data = base64.b64decode(base64_data)
+        
+        # Save the decoded data to a file
+        filename = f"RecivedData\data.txt"
+        with open(filename, "wb") as file:
+            file.write(decoded_data)
+        
+        response = "Data received and saved to file: " + filename
     else:
         response = "No data received."
     
