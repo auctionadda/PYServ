@@ -12,7 +12,7 @@ def handle_post_request():
     # Replace the following lines with your desired logic
 
     if message:
-        response = "Message received: " + message
+        response = "A Message received: " + message
     else:
         response = "No message received."
 
