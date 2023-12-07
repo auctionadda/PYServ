@@ -1,0 +1,9 @@
+SocketException: An existing connection was forcibly closed by the remote host.
+
+System.Net.Sockets.SocketAsyncResult.CheckIfThrowDelayedException () (at <ae467d6c56404add82dd0ad831025110>:0)
+System.Net.Sockets.Socket.EndReceiveFrom (System.IAsyncResult asyncResult, System.Net.EndPoint& endPoint) (at <ae467d6c56404add82dd0ad831025110>:0)
+System.Net.Sockets.UdpClient.EndReceive (System.IAsyncResult asyncResult, System.Net.IPEndPoint& remoteEP) (at <ae467d6c56404add82dd0ad831025110>:0)
+System.Net.Sockets.UdpClient.<ReceiveAsync>b__65_1 (System.IAsyncResult ar) (at <ae467d6c56404add82dd0ad831025110>:0)
+System.Threading.Tasks.TaskFactory`1[TResult].FromAsyncCoreLogic (System.IAsyncResult iar, System.Func`2[T,TResult] endFunction, System.Action`1[T] endAction, System.Threading.Tasks.Task`1[TResult] promise, System.Boolean requiresSynchronization) (at <eef08f56e2e042f1b3027eca477293d9>:0)
+Rethrow as AggregateException: One or more errors occurred. (An existing connection was forcibly closed by the remote host.
+
