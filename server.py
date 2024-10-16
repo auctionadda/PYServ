@@ -1,47 +1,54 @@
-from flask import Flask, request
-import base64
+from flask import Flask, jsonify, request
+import json
 import os
-import urllib.parse
 
 app = Flask(__name__)
 
-# Counter for assigning unique IDs
-id_counter = 0
+class UniqueStringGenerator:
+    def __init__(self, state_file='prefix_state.json'):
+        # Define the prefixes and initialize all counts to 0
+        self.prefixes = {
+            'TWL': 0,
+            'CLA': 0,
+            'CHR': 0,
+            'CUA': 0,
+            'GBL': 0,
+            'RXC': 0
+        }
+        self.state_file = state_file
+        self.load_state()
 
-@app.route('/', methods=['POST'])
-def handle_post_request():
-    global id_counter
+    def load_state(self):
+        if os.path.exists(self.state_file):
+            with open(self.state_file, 'r') as file:
+                self.prefixes = json.load(file)
 
-    # Generate a unique ID for the client
-    client_id = str(id_counter)
-    id_counter += 1
+    def save_state(self):
+        with open(self.state_file, 'w') as file:
+            json.dump(self.prefixes, file)
 
-    # Get the base64 string from the request
-    message = request.form.get('base64_data')
-    message = urllib.parse.unquote(message)
-    print("Received message encoded:", message)
+    def get_next(self, prefix):
+        if prefix not in self.prefixes:
+            raise ValueError(f"Invalid prefix: {prefix}")
+        current_number = self.prefixes[prefix]
+        number_str = f'{current_number:05d}'
+        self.prefixes[prefix] += 1
+        self.save_state()
+        return f'{prefix}{number_str}'
 
-    # Remove the "data:image/png;base64," prefix
-    prefix = "data:image/png;base64,"
-    if message.startswith(prefix):
-        message = message[len(prefix):]
+generator = UniqueStringGenerator()
 
-    # Save the base64 string as an image
+@app.route('/get_number', methods=['GET'])
+def get_number():
+    prefix = request.args.get('prefix')
+    if not prefix:
+        return jsonify({"error": "Prefix is required"}), 400
+
     try:
-        # Create the inputimages folder if it doesn't exist
-        if not os.path.exists('inputimages'):
-            os.makedirs('inputimages')
+        next_string = generator.get_next(prefix.upper())
+        return jsonify({"number": next_string})
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
 
-        # Save the image with a unique filename
-        filename = f"inputimages/image_{client_id}.png"
-        with open(filename, 'wb') as image_file:
-            image_file.write(base64.b64decode(message))
-
-        response = "Message received. Image saved as: " + filename
-    except base64.binascii.Error as e:
-        response = "Error decoding base64 string: " + str(e)
-
-    return response
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=5000)
