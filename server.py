@@ -38,7 +38,7 @@ class UniqueStringGenerator:
 
 generator = UniqueStringGenerator()
 
-@app.route('/get_number', methods=['GET'])
+@app.route('/VolvoFAG/get_number', methods=['GET'])
 def get_number():
     prefix = request.args.get('prefix')
     if not prefix:
